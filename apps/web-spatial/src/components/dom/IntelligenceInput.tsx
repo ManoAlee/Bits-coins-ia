@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import HolographicChart from './HolographicChart';
 import { useUniverseStore } from '@/shared/store/useUniverseStore';
 
@@ -119,5 +119,27 @@ export default function IntelligenceInput() {
                 </div>
             )}
         </div>
+    );
+}
+
+function TypewriterText({ text }: { text: string }) {
+    const [displayed, setDisplayed] = useState("");
+
+    useEffect(() => {
+        setDisplayed("");
+        let i = 0;
+        const timer = setInterval(() => {
+            setDisplayed((prev) => prev + text.charAt(i));
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, 10);
+        return () => clearInterval(timer);
+    }, [text]);
+
+    return (
+        <span>
+            {displayed}
+            <span className="animate-blink inline-block w-2 h-4 bg-emerald-500 ml-1 align-middle"></span>
+        </span>
     );
 }
