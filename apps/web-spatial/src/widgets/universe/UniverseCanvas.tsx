@@ -2,7 +2,7 @@
 
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Environment } from '@react-three/drei';
-import { EffectComposer, Bloom, Vignette, Noise } from '@react-three/postprocessing';
+import ManualEffects from './ManualEffects';
 import * as THREE from 'three';
 import React, { Suspense, useEffect, useRef } from 'react';
 import StockPlanet from '@/entities/stock/StockPlanet';
@@ -100,14 +100,7 @@ export default function UniverseCanvas() {
                         <CameraController />
 
                         {modality === 'PROMETHEUS' && (
-                            <EffectComposer>
-                                <Bloom
-                                    intensity={0.5 + (intensity * 1.5)}
-                                    luminanceThreshold={0.2}
-                                    luminanceSmoothing={0.9}
-                                />
-                                <Vignette darkness={0.5 + (intensity * 0.3)} offset={0.5} />
-                            </EffectComposer>
+                            <ManualEffects intensity={intensity} />
                         )}
                     </Suspense>
                 </Canvas>
