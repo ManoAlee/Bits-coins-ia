@@ -8,7 +8,7 @@ echo.
 :: 1. IGNITE VISION (FRONTEND)
 echo [VISION] Materializing Spatial Web...
 cd apps\web-spatial
-call npm install
+call npm install --legacy-peer-deps
 start "ANTIGRAVITY VISION" cmd /k "npm run dev"
 cd ..\..
 
