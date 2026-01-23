@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+langchain
+langgraph
+pydantic
+pydantic-settings
+orjson
+loguru
+httpx
+# Removed heavy compiled libraries (OpenBB, NeuralForecast, DuckDB) 
+# to ensure compatibility with Python 3.14 (Bleeding Edge).
+# utilized raw API protocols via httpx instead.

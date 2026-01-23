@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # PILLAR A: THE BRAIN
+  core-agents:
+    build:
+      context: ./packages/core-agents
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENBB_API_KEY=${OPENBB_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+    volumes:
+      - ./packages/core-agents:/app
+    networks:
+      - universe-grid
+
+  # PILLAR B: THE VISION (Dev Mode)
+  web-spatial:
+    build:
+      context: ./apps/web-spatial
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/web-spatial:/app
+      - /app/node_modules
+    environment:
+      - NEXT_PUBLIC_API_URL=http://core-agents:8000
+    networks:
+      - universe-grid
+
+  # PILLAR C: MEMORY (Vector DB Emulation / Cache)
+  redis-spatial:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - universe-grid
+
+networks:
+  universe-grid:
+    driver: bridge
