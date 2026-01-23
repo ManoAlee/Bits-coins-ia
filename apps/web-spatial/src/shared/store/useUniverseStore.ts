@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 
-interface PlanetData {
+export type UniverseModality = 'PROMETHEUS' | 'VOID';
+
+export interface PlanetData {
     ticker: string;
     price: number;
     change: number;
@@ -9,6 +11,7 @@ interface PlanetData {
 }
 
 interface UniverseState {
+    modality: UniverseModality;
     selectedTicker: string | null;
     hoveredTicker: string | null;
     cameraFocus: [number, number, number]; // x, y, z
@@ -16,6 +19,7 @@ interface UniverseState {
     universeItems: PlanetData[];
 
     // Actions
+    setModality: (mode: UniverseModality) => void;
     setSelectedTicker: (ticker: string | null) => void;
     setHoveredTicker: (ticker: string | null) => void;
     setCameraFocus: (position: [number, number, number]) => void;
@@ -24,6 +28,7 @@ interface UniverseState {
 }
 
 export const useUniverseStore = create<UniverseState>((set) => ({
+    modality: 'PROMETHEUS',
     selectedTicker: null,
     hoveredTicker: null,
     cameraFocus: [0, 0, 0],
@@ -34,12 +39,13 @@ export const useUniverseStore = create<UniverseState>((set) => ({
         { ticker: 'NVDA', price: 950, change: 12.5, pos: [-5, -2, -5] },
     ],
 
-    setSelectedTicker: (ticker) => set({ selectedTicker: ticker, isFocusMode: !!ticker }),
-    setHoveredTicker: (ticker) => set({ hoveredTicker: ticker }),
-    setCameraFocus: (position) => set({ cameraFocus: position }),
+    setModality: (modality: UniverseModality) => set({ modality }),
+    setSelectedTicker: (ticker: string | null) => set({ selectedTicker: ticker, isFocusMode: !!ticker }),
+    setHoveredTicker: (ticker: string | null) => set({ hoveredTicker: ticker }),
+    setCameraFocus: (position: [number, number, number]) => set({ cameraFocus: position }),
     exitFocusMode: () => set({ selectedTicker: null, isFocusMode: false, cameraFocus: [0, 0, 0] }),
 
-    spawnPlanet: (ticker, price, change, color) => set((state) => {
+    spawnPlanet: (ticker: string, price: number, change: number, color?: string) => set((state: UniverseState) => {
         if (state.universeItems.find(p => p.ticker === ticker)) return state;
         const r = () => (Math.random() - 0.5) * 20;
         const newPlanet: PlanetData = {

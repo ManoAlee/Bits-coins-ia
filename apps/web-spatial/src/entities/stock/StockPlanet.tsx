@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { MeshDistortMaterial, Text, Float, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -55,8 +55,8 @@ export default function StockPlanet({ ticker, price, changePercent, position }: 
                 <mesh
                     ref={meshRef}
                     onClick={handleClick}
-                    onPointerOver={() => { document.body.style.cursor = 'pointer'; setHovered(true); }}
-                    onPointerOut={() => { document.body.style.cursor = 'auto'; setHovered(false); }}
+                    onPointerOver={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'pointer'; setHovered(true); }}
+                    onPointerOut={() => { if (typeof document !== 'undefined') document.body.style.cursor = 'auto'; setHovered(false); }}
                 >
                     <sphereGeometry args={[1, 32, 32]} />
                     <MeshDistortMaterial
@@ -70,30 +70,31 @@ export default function StockPlanet({ ticker, price, changePercent, position }: 
                     />
                 </mesh>
 
-                {/* Ticker Label (Billboard) */}
-                <Text
-                    ref={textRef as any}
+                {/* Ticker Label (DOM-based Html) */}
+                <Html
                     position={[0, 1.5, 0]}
-                    fontSize={0.5}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    font="/fonts/Inter-Bold.woff" // Ensure font exists or fallback
+                    center
+                    distanceFactor={10}
+                    className="pointer-events-none select-none"
                 >
-                    {ticker}
-                </Text>
+                    <div className="text-white font-bold text-lg whitespace-nowrap bg-black/40 px-2 py-0.5 rounded backdrop-blur-sm">
+                        {ticker}
+                    </div>
+                </Html>
 
                 {/* Price Subtitle */}
                 {(hovered || isSelected) && (
-                    <Text
+                    <Html
                         position={[0, -1.5, 0]}
-                        fontSize={0.3}
-                        color={isPositive ? '#6ee7b7' : '#fca5a5'}
-                        anchorX="center"
-                        anchorY="middle"
+                        center
+                        distanceFactor={10}
+                        className="pointer-events-none select-none"
                     >
-                        ${price.toFixed(2)} ({changePercent}%)
-                    </Text>
+                        <div className={`text-sm font-mono whitespace-nowrap px-2 py-0.5 rounded bg-black/60 ${isPositive ? 'text-emerald-400' : 'text-red-400'
+                            }`}>
+                            ${price.toFixed(2)} ({changePercent}%)
+                        </div>
+                    </Html>
                 )}
             </Float>
         </group>
