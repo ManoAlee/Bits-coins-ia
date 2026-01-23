@@ -99,14 +99,16 @@ export default function UniverseCanvas() {
                         />
                         <CameraController />
 
-                        <EffectComposer multisampling={0}>
-                            <Bloom
-                                intensity={0.5 + (intensity * 1.5)}
-                                luminanceThreshold={0.2}
-                                luminanceSmoothing={0.9}
-                            />
-                            <Vignette darkness={0.5 + (intensity * 0.3)} offset={0.5} />
-                        </EffectComposer>
+                        {modality === 'PROMETHEUS' && (
+                            <EffectComposer>
+                                <Bloom
+                                    intensity={0.5 + (intensity * 1.5)}
+                                    luminanceThreshold={0.2}
+                                    luminanceSmoothing={0.9}
+                                />
+                                <Vignette darkness={0.5 + (intensity * 0.3)} offset={0.5} />
+                            </EffectComposer>
+                        )}
                     </Suspense>
                 </Canvas>
             </div>
