@@ -12,6 +12,7 @@ import { useNeuroState } from '@/shared/store/useNeuroState';
 import IntelligenceInput from '@/components/dom/IntelligenceInput';
 import ProceduralAudioEngine from '@/shared/audio/ProceduralAudioEngine';
 import StaticVoidTerminal from '@/features/terminal/StaticVoidTerminal';
+import DashboardLayout from '@/features/dashboard/DashboardLayout';
 
 // Camera Controller Component with Parallax
 function CameraController() {
@@ -106,48 +107,50 @@ export default function UniverseCanvas() {
                 </Canvas>
             </div>
 
-            {/* HUD Layer (Diegetic) */}
+            {/* FUNCTIONAL COCKPIT LAYER */}
             {modality === 'PROMETHEUS' && (
-                <div className="absolute inset-0 pointer-events-none">
-                    {/* Logo / Rebrand */}
-                    <div className="absolute top-6 left-8 pointer-events-auto">
-                        <h1 className="text-2xl font-black tracking-[0.2em] text-white">
-                            PROMETHEUS<span className="text-cyan-400">-X</span>
-                        </h1>
-                        <div className="flex items-center gap-2 mt-1">
-                            <div className={`w-2 h-2 rounded-full animate-pulse ${mood === 'CALM' ? 'bg-cyan-500' :
-                                mood === 'ANALYSING' ? 'bg-blue-500' :
-                                    mood === 'ALERT' ? 'bg-amber-500' : 'bg-red-500'
-                                }`} />
-                            <p className="text-[10px] text-gray-400 font-mono tracking-widest">
-                                {mood} // NEURO-BRIDGE ACTIVE
-                            </p>
+                <DashboardLayout>
+                    <div className="absolute inset-0 pointer-events-none">
+                        {/* Logo / Rebrand */}
+                        <div className="absolute top-6 left-8 pointer-events-auto">
+                            <h1 className="text-2xl font-black tracking-[0.2em] text-white">
+                                PROMETHEUS<span className="text-cyan-400">-X</span>
+                            </h1>
+                            <div className="flex items-center gap-2 mt-1">
+                                <div className={`w-2 h-2 rounded-full animate-pulse ${mood === 'CALM' ? 'bg-cyan-500' :
+                                    mood === 'ANALYSING' ? 'bg-blue-500' :
+                                        mood === 'ALERT' ? 'bg-amber-500' : 'bg-red-500'
+                                    }`} />
+                                <p className="text-[10px] text-gray-400 font-mono tracking-widest">
+                                    {mood} // NEURO-BRIDGE ACTIVE
+                                </p>
+                            </div>
                         </div>
+
+                        {/* Modality Toggles (Bunker Mode) */}
+                        <div className="absolute top-6 right-8 pointer-events-auto">
+                            <button
+                                onClick={() => { pulseGlitch(800); setTimeout(() => setModality('VOID'), 300); }}
+                                className="text-[10px] font-mono p-2 border border-white/10 bg-black/50 hover:bg-white/10 transition-colors text-gray-400 tracking-tighter"
+                            >
+                                COLLAPSE_TO_VOID [CTRL-V]
+                            </button>
+                        </div>
+
+                        {/* Intelligence Terminal - Global Access */}
+                        <div className="absolute bottom-32 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto z-50">
+                            <IntelligenceInput />
+                        </div>
+
+                        {/* Side Panels - Global Access */}
+                        <StockDetailPanel />
+
+                        {/* Visual Stress FX */}
+                        {intensity > 0.8 && (
+                            <div className="absolute inset-0 pointer-events-none border-[20px] border-red-900/10 animate-pulse" />
+                        )}
                     </div>
-
-                    {/* Modality Toggles (Bunker Mode) */}
-                    <div className="absolute top-6 right-8 pointer-events-auto">
-                        <button
-                            onClick={() => { pulseGlitch(800); setTimeout(() => setModality('VOID'), 300); }}
-                            className="text-[10px] font-mono p-2 border border-white/10 bg-black/50 hover:bg-white/10 transition-colors text-gray-400 tracking-tighter"
-                        >
-                            COLLAPSE_TO_VOID [CTRL-V]
-                        </button>
-                    </div>
-
-                    {/* Intelligence Terminal (Bottom) */}
-                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-full max-w-2xl pointer-events-auto">
-                        <IntelligenceInput />
-                    </div>
-
-                    {/* Side Panels */}
-                    <StockDetailPanel />
-
-                    {/* Visual Stress FX */}
-                    {intensity > 0.8 && (
-                        <div className="absolute inset-0 pointer-events-none border-[20px] border-red-900/10 animate-pulse" />
-                    )}
-                </div>
+                </DashboardLayout>
             )}
         </div>
     );
