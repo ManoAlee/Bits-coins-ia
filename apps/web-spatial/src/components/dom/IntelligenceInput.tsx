@@ -5,7 +5,6 @@ import HolographicChart from './HolographicChart';
 import { useUniverseStore } from '@/shared/store/useUniverseStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Sparkles, Zap } from 'lucide-react';
-import { Sparkles, Zap } from 'lucide-react';
 import { API_URL } from '@/libs/constants';
 import { generateMockChart, generateMockResearch } from '@/libs/mock-data';
 

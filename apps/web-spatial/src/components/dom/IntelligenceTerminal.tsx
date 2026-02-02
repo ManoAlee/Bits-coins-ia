@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/libs/utils';
 import { Search, Loader2, Sparkles, AlertCircle } from 'lucide-react';
-import { Search, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import { API_URL } from '@/libs/constants';
 import { generateMockResearch } from '@/libs/mock-data';
 
