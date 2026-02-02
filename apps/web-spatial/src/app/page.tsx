@@ -501,8 +501,10 @@ function InfoBox({ label, value, success }: any) {
 }
 
 function MultiverseBox({ metrics }: any) {
+    const [activeUniverse, setActiveUniverse] = useState<string | null>(null);
+
     const UNIVERSES_LIST = [
-        { id: "BOOLE", label: "Boole", desc: "Binary Lógic" },
+        { id: "BOOLE", label: "Boole", desc: "Binary Logic" },
         { id: "ASSEMBLY", label: "Assembly", desc: "Hardware Reality" },
         { id: "FORTRAN", label: "Fortran", desc: "Scientific Origin" },
         { id: "LISP", label: "Lisp", desc: "Symbolic Mind" },
@@ -517,8 +519,24 @@ function MultiverseBox({ metrics }: any) {
         { id: "GO", label: "Go", desc: "Orchestration" },
         { id: "RUST", label: "Rust", desc: "Safe Contract" },
         { id: "CUDA", label: "CUDA", desc: "Brute Force" },
-        { id: "SQL", label: "SQL", desc: "Persistent Memory" }
-    ] // Reduced list for cleaner UI or keep all if needed
+        { id: "SQL", label: "SQL", desc: "Persistent Memory" },
+        { id: "SHELL", label: "Shell", desc: "Automation" },
+        { id: "POWERSHELL", label: "PowerShell", desc: "Admin Logic" },
+        { id: "PHP", label: "PHP", desc: "Web Legacy" },
+        { id: "RUBY", label: "Ruby", desc: "Expressive" },
+        { id: "SCALA", label: "Scala", desc: "Big Data" },
+        { id: "HASKELL", label: "Haskell", desc: "Mathematical" },
+        { id: "ERLANG", label: "Erlang", desc: "Resilience" },
+        { id: "KOTLIN", label: "Kotlin", desc: "Evolution" },
+        { id: "SWIFT", label: "Swift", desc: "Local AI" },
+        { id: "JULIA", label: "Julia", desc: "Velocity" },
+        { id: "NIM", label: "Nim", desc: "Minimalism" },
+        { id: "LUA", label: "Lua", desc: "Real-time" },
+        { id: "DART", label: "Dart", desc: "Multi-platform" },
+        { id: "GROOVY", label: "Groovy", desc: "Workflow" },
+        { id: "OBJC", label: "Obj-C", desc: "Bridge" },
+        { id: "SCRATCH", label: "Scratch", desc: "Intent" }
+    ]
 
     return (
         <div className="w-full bg-zinc-950/50 border border-white/10 rounded-3xl p-6 backdrop-blur-2xl shadow-xl lg:h-[320px] flex flex-col">
@@ -526,17 +544,23 @@ function MultiverseBox({ metrics }: any) {
                 <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full border border-cyan-400" /> Multiverse
                 </span>
-                <span className="text-[9px] font-mono text-cyan-400/80">Active-Nodes</span>
+                <span className="text-[9px] font-mono text-cyan-400/80">32_DIMENSIONS</span>
             </div>
             <div className="flex-1 overflow-y-auto grid grid-cols-4 gap-2 scrollbar-hide pr-1">
                 {UNIVERSES_LIST.map((u, i) => {
-                    const isActive = metrics?.oracle_insight?.multiversal_trace?.includes(u.id);
+                    // Check both backend trace and local interaction
+                    const isActive = metrics?.oracle_insight?.multiversal_trace?.includes(u.id) || activeUniverse === u.id;
                     return (
                         <div
                             key={u.id}
-                            className={`aspect-square p-1 border rounded-lg transition-all flex flex-col items-center justify-center text-center group cursor-help ${isActive ? 'bg-cyan-900/40 border-cyan-500/30' : 'bg-white/5 border-white/5 opacity-50 hover:opacity-100 hover:bg-white/10'}`}
+                            onClick={() => setActiveUniverse(u.id === activeUniverse ? null : u.id)}
+                            className={`aspect-square p-1 border rounded-lg transition-all flex flex-col items-center justify-center text-center group cursor-pointer relative ${isActive ? 'bg-cyan-900/40 border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]' : 'bg-white/5 border-white/5 opacity-50 hover:opacity-100 hover:bg-white/10'}`}
                         >
                             <div className={`text-[7px] lg:text-[8px] font-bold ${isActive ? 'text-cyan-400' : 'text-white/40'}`}>{u.label}</div>
+                            {/* Tooltip on hover */}
+                            <div className="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-max max-w-[120px] bg-black/90 border border-white/10 text-white text-[8px] p-2 rounded z-50 pointer-events-none">
+                                {u.desc}
+                            </div>
                         </div>
                     )
                 })}
