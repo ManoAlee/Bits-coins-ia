@@ -132,16 +132,38 @@ export default function EvolvedRealityEngine() {
 
         // Mock Mode Pre-check for Chat
         if (API_URL.includes('localhost') && window.location.hostname !== 'localhost') {
-            const mockResponses = [
-                "Simulation Matrix Active. Backend unreachable in this dimension.",
-                "Reviewing local probability clouds... Bullish divergence detected.",
-                "Neural Uplink Offline. Using heuristic logic for your query.",
-                "System running in Autonomous Mock Mode. Analysis: Stable."
-            ]
-            const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)]
+            const inputLower = userMsg.toLowerCase()
+            let responseText = ""
+
+            // Context-Aware Mock Intelligence
+            if (inputLower.includes('50 reais') || inputLower.includes('50') || inputLower.includes('lucrar') || inputLower.includes('investir')) {
+                responseText = "ANALYSIS COMPLETE [CAPITAL: R$50.00]:\n\n" +
+                    "1. ESTRATÉGIA SATOSHI (Segurança): Compra recorrente de Frações de Bitcoin (DCA). Histórico prova que tempo no mercado supera timing de mercado.\n" +
+                    "2. ESTRATÉGIA DEFI (Risco Médio): Staking em L2 (Arbitrum/Optimism) para rendimento real (~5-12% APY).\n" +
+                    "3. ESTRATÉGIA ALFA (Risco Alto): Alocação em memecoins com forte comunidade (ex: DOGE) em momentos de alta volatilidade social.\n\n" +
+                    "CONCLUSÃO DO SISTEMA: Com aporte baixo, evite taxas de gás ETH. Foque em redes baratas (Solana/L2) ou acumulação pura de BTC."
+            } else if (inputLower.includes('bitcoin') || inputLower.includes('btc')) {
+                responseText = "DADOS ON-CHAIN [BITCOIN]:\n" +
+                    "- Hashrate: All-Time High (Rede Mais Segura)\n" +
+                    "- Halving: Choque de oferta iminente/recente\n" +
+                    "- Institucional: Fluxo de ETF positivo\n\n" +
+                    "VIÉS: Altamente Bullish no longo prazo. Resistência chave em $100k."
+            } else if (inputLower.includes('risco') || inputLower.includes('cair')) {
+                responseText = "ANÁLISE DE VOLATILIDADE:\n" +
+                    "O mercado apresenta estrutura fractal. Quedas de 20-30% são saudáveis em bull markets. Mantenha caixa para recompra (Buy the Dip)."
+            } else {
+                const mockResponses = [
+                    "Simulation Matrix Active. Backend unreachable in this dimension.",
+                    "Reviewing local probability clouds... Bullish divergence detected.",
+                    "Neural Uplink Offline. Using heuristic logic for your query.",
+                    "System running in Autonomous Mock Mode. Analysis: Stable."
+                ]
+                responseText = mockResponses[Math.floor(Math.random() * mockResponses.length)]
+            }
+
             setTimeout(() => {
-                setChatHistory(prev => [...prev, { role: 'engine', text: `[SIMULATION] ${randomResponse}` }])
-            }, 600)
+                setChatHistory(prev => [...prev, { role: 'engine', text: `[SIMULATION] ${responseText}` }])
+            }, 800)
             return;
         }
 
