@@ -122,11 +122,26 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3001", "http://127.0.0.1:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Global Error: {exc}")
+    # Still return valid JSON so the frontend doesn't get a raw text error
+    # and ensure it has CORS headers (handled by middleware if using FastAPI responses)
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        status_code=500,
+        content={
+            "detail": str(exc),
+            "type": type(exc).__name__,
+            "status": "error"
+        }
+    )
 
 @app.get("/")
 async def root():
@@ -279,7 +294,21 @@ async def get_metrics():
 
 @app.get("/metrics/dashboard")
 async def get_value_dashboard():
-    return await reality_metrics.get_value_dashboard()
+    if not reality_metrics:
+        # Return empty but valid structure to avoid frontend crash
+        return {
+            "headline": "Reality Engine Synchronizing...",
+            "today": {"decisions_made": 0, "time_saved_hours": 0.0, "accuracy": 0, "roi": 0.0},
+            "raw_intelligence": {"all": []},
+            "oracle_insight": None,
+            "this_week": {"decisions_made": 0, "time_saved_hours": 0.0},
+            "value_proof": {"time_saved_vs_manual": "0%", "decisions_validated": 0, "risk_managed": "0%"}
+        }
+    try:
+        return await reality_metrics.get_value_dashboard()
+    except Exception as e:
+        logger.error(f"Dashboard error: {e}")
+        return {"error": "Dashboard failed to materialize"}
 
 @app.get("/metrics/export")
 async def export_metrics():

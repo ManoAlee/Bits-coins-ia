@@ -193,9 +193,10 @@ class RealityMetrics:
             "total_decisions": 0,
             "total_time_saved_hours": 0.0,
             "avg_time_saved_percentage": 0.0,
-            "accuracy_percentage": None,
-            "avg_roi_percentage": None,
+            "accuracy_percentage": 0.0,
+            "avg_roi_percentage": 0.0,
             "avg_risk_score": 0.0,
+            "avg_confidence": 0.0,
             "value_statement": "Awaiting first system activations..."
         }
 
