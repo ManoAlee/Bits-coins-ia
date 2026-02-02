@@ -78,6 +78,13 @@ export default function EvolvedRealityEngine() {
         const fetchAll = async () => {
             // Helper to safe fetch
             const safeFetch = async (endpoint: string, fallback: any) => {
+                // Prevent mixed content / CORS errors in production
+                if (API_URL.includes('localhost') && window.location.hostname !== 'localhost') {
+                    // Only log once or sparingly to avoid spam
+                    if (endpoint === '/metrics/dashboard') console.log("[MockMode] Production detected with localhost API. Switching to Simulation Matrix.")
+                    return fallback;
+                }
+
                 try {
                     const res = await fetch(`${API_URL}${endpoint}`)
                     if (!res.ok) throw new Error('Network response was not ok')
@@ -123,6 +130,21 @@ export default function EvolvedRealityEngine() {
         setChatInput('')
         setChatHistory(prev => [...prev, { role: 'user', text: userMsg }])
 
+        // Mock Mode Pre-check for Chat
+        if (API_URL.includes('localhost') && window.location.hostname !== 'localhost') {
+            const mockResponses = [
+                "Simulation Matrix Active. Backend unreachable in this dimension.",
+                "Reviewing local probability clouds... Bullish divergence detected.",
+                "Neural Uplink Offline. Using heuristic logic for your query.",
+                "System running in Autonomous Mock Mode. Analysis: Stable."
+            ]
+            const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)]
+            setTimeout(() => {
+                setChatHistory(prev => [...prev, { role: 'engine', text: `[SIMULATION] ${randomResponse}` }])
+            }, 600)
+            return;
+        }
+
         try {
             const res = await fetch(`${API_URL}/chat`, {
                 method: 'POST',
@@ -150,6 +172,12 @@ export default function EvolvedRealityEngine() {
 
     const triggerDeepScan = async () => {
         setAnalyzing(true)
+        if (API_URL.includes('localhost') && window.location.hostname !== 'localhost') {
+            console.log("[MockMode] Deep Scan Simulation Active.")
+            setTimeout(() => setAnalyzing(false), 2000)
+            return
+        }
+
         try {
             await fetch(`${API_URL}/decide`, {
                 method: 'POST',
