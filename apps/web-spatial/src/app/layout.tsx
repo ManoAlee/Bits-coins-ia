@@ -3,10 +3,11 @@ import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
-title: 'BITS.COINS | Financial Multiverse',
+export const metadata = {
+  title: 'BITS.COINS | Financial Multiverse',
   description: 'Spatial Intelligence Terminal',
-    icons: {
-  icon: '/favicon.ico',
+  icons: {
+    icon: '/favicon.ico',
   },
 }
 
