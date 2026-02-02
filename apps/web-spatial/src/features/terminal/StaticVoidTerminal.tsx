@@ -25,7 +25,7 @@ export default function StaticVoidTerminal() {
                 '>> PROTOCOL: BRUTALIST_EFFICIENCY_ACTIVE',
                 '>> TYPE "exit" TO RESTORE HYPER-REALITY',
                 '----------------------------------------',
-                ...universeItems.map(p => `[DATA] ${p.ticker}: $${p.price.toFixed(2)} | CHG: ${p.change}%`)
+                ...(Array.isArray(universeItems) ? universeItems.map(p => `[DATA] ${p.ticker || 'UNKNOWN'}: $${(p.price || 0).toFixed(2)} | CHG: ${(p.change || 0).toFixed(2)}%`) : [])
             ];
             setLogs(initialLogs);
         }

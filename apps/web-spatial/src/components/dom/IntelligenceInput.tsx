@@ -43,15 +43,15 @@ export default function IntelligenceInput() {
             });
 
             if (!res.ok) throw new Error('Neural Link Severed');
-
             const data = await res.json();
-            setResponse(data.answer);
+            const answer = data?.answer || "NEURAL_LINK_QUIET: No response from cortex.";
+            setResponse(answer);
 
             // 3. Check for Materialization Protocol
-            const spawnMatch = data.answer.match(/\[SPAWN:\s*(\w+)\s+([\d\.]+)\s+([-\d\.]+)\s*(\w*)\]/);
+            const spawnMatch = answer.match(/\[SPAWN:\s*(\w+)\s+([\d\.]+)\s+([-\d\.]+)\s*(\w*)\]/);
             if (spawnMatch) {
                 const [_, ticker, price, change, color] = spawnMatch;
-                useUniverseStore.getState().spawnPlanet(ticker, parseFloat(price), parseFloat(change), color);
+                useUniverseStore.getState().spawnPlanet(ticker, parseFloat(price) || 0, parseFloat(change) || 0, color);
 
                 // Visual Alert
                 setMaterializing(ticker);
@@ -161,7 +161,7 @@ export default function IntelligenceInput() {
                             <span className="text-amber-500 font-bold block mb-2 text-[10px] tracking-widest">
                                 // VISUAL_HARMONICS_DETECTED
                             </span>
-                            <HolographicChart data={chartData.data} ticker={chartData.ticker} />
+                            <HolographicChart data={chartData.data as any[]} ticker={chartData.ticker as string} />
                         </div>
                     )}
                 </div>
@@ -174,13 +174,14 @@ function TypewriterText({ text }: { text: string }) {
     const [displayed, setDisplayed] = useState("");
 
     useEffect(() => {
+        if (!text) return;
         setDisplayed("");
         let i = 0;
-        const speed = text.length > 200 ? 5 : 15; // Dynamic speed based on length
+        const speed = (text?.length || 0) > 200 ? 5 : 15; // Dynamic speed based on length
 
         const timer = setInterval(() => {
-            if (i < text.length) {
-                setDisplayed((prev) => prev + text.charAt(i));
+            if (text && i < text.length) {
+                setDisplayed((prev: string) => prev + text.charAt(i));
                 i++;
             } else {
                 clearInterval(timer);

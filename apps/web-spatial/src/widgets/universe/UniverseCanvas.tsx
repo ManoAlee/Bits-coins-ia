@@ -1,7 +1,7 @@
 'use client';
 
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { OrbitControls, Stars, Environment } from '@react-three/drei';
+import { OrbitControls, Stars, Environment, Html, PerspectiveCamera, Preload } from '@react-three/drei';
 import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import React, { Suspense, useEffect, useRef, useState } from 'react';
@@ -23,8 +23,8 @@ function CameraController() {
     const { intensity } = useNeuroState();
 
     useFrame((state) => {
-        if (isFocusMode) {
-            const targetVec = new THREE.Vector3(...targetFocus);
+        if (isFocusMode && targetFocus) {
+            const targetVec = new THREE.Vector3(...(targetFocus as [number, number, number]));
             const offset = new THREE.Vector3(0, 2, 5);
             const finalPos = targetVec.clone().add(offset);
             camera.position.lerp(finalPos, 0.05);
@@ -91,19 +91,28 @@ export default function UniverseCanvas() {
             {/* 3D Layer */}
             <div className={`absolute inset-0 transition-opacity duration-700 ${modality === 'PROMETHEUS' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                 <Canvas
-                    dpr={[1, 2]}
+                    dpr={1}
                     camera={{ position: [0, 0, 15], fov: 45 }}
                     frameloop="always"
+                    gl={{
+                        powerPreference: 'high-performance',
+                        antialias: false,
+                        stencil: false,
+                        depth: true,
+                        alpha: true,
+                        failIfMajorPerformanceCaveat: true
+                    }}
                 >
                     <Suspense fallback={null}>
                         <SceneContent intensity={intensity} atmosphereColor={atmosphereColor} universeItems={universeItems} />
                     </Suspense>
 
-                    {/* 
+                    {/*
                         DEFENSIVE VISION LAYER:
                         Consolidated, memoized post-processing.
                     */}
                     <PostProcessingLayer />
+                    <Preload all />
                 </Canvas>
             </div>
 
@@ -171,21 +180,21 @@ const SceneContent = React.memo(({ intensity, atmosphereColor, universeItems }: 
             <fog attach="fog" args={[atmosphereColor, 10, 50]} />
             <ambientLight intensity={0.2 + (intensity * 0.3)} />
             <pointLight position={[10, 10, 10]} intensity={2} color={atmosphereColor} />
+            <group>
+                <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
+                <Environment preset="city" />
 
-            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-            <Environment preset="city" />
-
-            {/* The PROMETHEUS-X Financial Galaxy */}
-            {universeItems.map((stock: any) => (
-                <StockPlanet
-                    key={stock.ticker}
-                    ticker={stock.ticker}
-                    price={stock.price}
-                    changePercent={stock.change}
-                    position={stock.pos as [number, number, number]}
-                />
-            ))}
-
+                {/* The PROMETHEUS-X Financial Galaxy */}
+                {Array.isArray(universeItems) && universeItems.filter(Boolean).map((stock: any) => (
+                    <StockPlanet
+                        key={stock?.ticker || Math.random().toString()}
+                        ticker={stock?.ticker}
+                        price={stock?.price}
+                        changePercent={stock?.change}
+                        position={stock?.pos || [0, 0, 0]}
+                    />
+                ))}
+            </group>
             <OrbitControls
                 enablePan={true}
                 enableZoom={true}
@@ -232,11 +241,10 @@ const PostProcessingLayer = React.memo(() => {
         <EffectComposer multisampling={0}>
             <Bloom
                 ref={bloomRef}
-                luminanceThreshold={0.2}
+                luminanceThreshold={0.5}
                 luminanceSmoothing={0.9}
-                mipmapBlur
+                mipmapBlur={false}
             />
-            <Noise ref={noiseRef} />
             <Vignette ref={vignetteRef} eskil={false} offset={0.5} />
         </EffectComposer>
     );

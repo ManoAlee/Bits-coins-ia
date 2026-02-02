@@ -7,29 +7,27 @@ services:
       context: ./packages/core-agents
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8081:8000"
     environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       - OPENBB_API_KEY=${OPENBB_API_KEY}
       - PINECONE_API_KEY=${PINECONE_API_KEY}
-    volumes:
-      - ./packages/core-agents:/app
     networks:
       - universe-grid
+    restart: unless-stopped
 
-  # PILLAR B: THE VISION (Dev Mode)
+  # PILLAR B: THE VISION (Production Mode)
   web-spatial:
     build:
       context: ./apps/web-spatial
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - ./apps/web-spatial:/app
-      - /app/node_modules
     environment:
       - NEXT_PUBLIC_API_URL=http://core-agents:8000
     networks:
       - universe-grid
+    restart: unless-stopped
 
   # PILLAR C: MEMORY (Vector DB Emulation / Cache)
   redis-spatial:

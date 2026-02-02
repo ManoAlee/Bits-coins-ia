@@ -11,7 +11,8 @@ export default function MarketGrid() {
     const [selectedAsset, setSelectedAsset] = useState<any | null>(null);
 
     // Filter items based on search
-    const filteredItems = universeItems.filter(item =>
+    const safeItems = Array.isArray(universeItems) ? universeItems : [];
+    const filteredItems = safeItems.filter(item =>
         item.ticker.toLowerCase().includes(filter.toLowerCase())
     );
 
@@ -50,20 +51,20 @@ export default function MarketGrid() {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredItems.map((item, index) => (
+                            {filteredItems.filter(Boolean).map((item, index) => (
                                 <tr
-                                    key={item.ticker}
-                                    onClick={() => setSelectedAsset(item)}
+                                    key={item?.ticker || index}
+                                    onClick={() => item && setSelectedAsset(item)}
                                     className={`
                                         group border-b border-white/5 cursor-pointer transition-colors
-                                        ${selectedAsset?.ticker === item.ticker ? 'bg-cyan-500/10' : 'hover:bg-white/5'}
+                                        ${selectedAsset?.ticker === item?.ticker ? 'bg-cyan-500/10' : 'hover:bg-white/5'}
                                     `}
                                 >
                                     <td className="p-4 text-xs font-mono text-gray-600 text-center">{index + 1}</td>
                                     <td className="p-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center font-bold text-xs">
-                                                {item.ticker[0]}
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-800 to-black border border-white/10 flex items-center justify-center font-bold text-xs uppercase text-cyan-400">
+                                                {item?.ticker ? item.ticker[0] : '?'}
                                             </div>
                                             <div>
                                                 <div className="font-bold text-sm tracking-wide text-white group-hover:text-cyan-400 transition-colors">{item.ticker}</div>
@@ -72,12 +73,12 @@ export default function MarketGrid() {
                                         </div>
                                     </td>
                                     <td className="p-4 text-right font-mono text-sm text-white">
-                                        R$ {item.price.toFixed(2)}
+                                        R$ {(item?.price || 0).toFixed(2)}
                                     </td>
                                     <td className="p-4 text-right">
-                                        <div className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.change >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                                            {item.change >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
-                                            {Math.abs(item.change).toFixed(2)}%
+                                        <div className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${(item?.change || 0) >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                                            {(item?.change || 0) >= 0 ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
+                                            {Math.abs(item?.change || 0).toFixed(2)}%
                                         </div>
                                     </td>
                                     <td className="p-4 text-right font-mono text-xs text-gray-500">
@@ -102,7 +103,7 @@ export default function MarketGrid() {
                         <div className="space-y-1">
                             <h2 className="text-3xl font-black text-white tracking-tighter">{selectedAsset.ticker}</h2>
                             <div className="text-4xl font-light text-cyan-400 font-mono">
-                                R$ {selectedAsset.price.toFixed(2)}
+                                R$ {(selectedAsset.price || 0).toFixed(2)}
                             </div>
                         </div>
 

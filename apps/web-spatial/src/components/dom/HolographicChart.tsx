@@ -21,15 +21,15 @@ export default function HolographicChart({ data, ticker }: ChartProps) {
             {/* Holographic Scanline Effect */}
             <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(6,182,212,0.1)_50%)] bg-[length:100%_4px] pointer-events-none z-0 opacity-50"></div>
 
-            <div className="flex justify-between items-center mb-2 z-10 relative">
-                <h3 className="text-cyan-400 font-bold tracking-widest text-xs">
-           // QUANTUM_DATA_STREAM: {ticker}
-                </h3>
-                <span className="text-[10px] text-emerald-400 animate-pulse">● LIVE_FEED</span>
+            <div className="absolute top-4 left-4 z-10">
+                <div className="text-[10px] text-cyan-500 font-mono tracking-widest uppercase">Entity_Feed: {ticker}</div>
+                <div className="text-xl font-black text-white">
+                    {data && data.length > 0 ? (data[data.length - 1]?.price || 0).toFixed(2) : '0.00'}
+                </div>
             </div>
 
             <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data}>
+                <AreaChart data={data || []}>
                     <defs>
                         <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.8} />

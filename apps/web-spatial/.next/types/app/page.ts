@@ -1,4 +1,4 @@
-// File: C:\Users\alessandro.meneses.Automotion\bitscoins\financial-universe-monorepo\apps\web-spatial\src\app\page.tsx
+// File: C:\Users\Alessandro Meneses\Documents\GitHub\Bits-coins-ia\apps\web-spatial\src\app\page.tsx
 import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

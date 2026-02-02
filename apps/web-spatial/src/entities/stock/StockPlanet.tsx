@@ -110,24 +110,26 @@ export default function StockPlanet({ ticker, price, changePercent, position }: 
                 )}
 
                 {/* 4. DATA LABELS (DOM-based Html) */}
-                <Html
-                    position={[0, 2, 0]}
-                    center
-                    distanceFactor={10}
-                    className="pointer-events-none select-none"
-                >
-                    <div className="flex flex-col items-center">
-                        <div className="text-white font-black text-xl tracking-tighter whitespace-nowrap bg-black/60 px-3 py-1 rounded-sm border border-white/10 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-                            {ticker}
+                {ticker && (
+                    <Html
+                        position={[0, 2, 0]}
+                        center
+                        distanceFactor={10}
+                        className="pointer-events-none select-none"
+                    >
+                        <div className="flex flex-col items-center">
+                            <div className="text-white font-black text-xl tracking-tighter whitespace-nowrap bg-black/60 px-3 py-1 rounded-sm border border-white/10 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                                {ticker}
+                            </div>
+                            <div className={`mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/80 border ${isPositive ? 'text-emerald-400 border-emerald-500/30' : 'text-red-400 border-red-500/30'}`}>
+                                {isPositive ? '▲' : '▼'} {(Math.abs(changePercent || 0)).toFixed(2)}%
+                            </div>
                         </div>
-                        <div className={`mt-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/80 border ${isPositive ? 'text-emerald-400 border-emerald-500/30' : 'text-red-400 border-red-500/30'}`}>
-                            {isPositive ? '▲' : '▼'} {Math.abs(changePercent).toFixed(2)}%
-                        </div>
-                    </div>
-                </Html>
+                    </Html>
+                )}
 
                 {/* Detailed Price Overlay */}
-                {(hovered || isSelected) && (
+                {ticker && (hovered || isSelected) && (
                     <Html
                         position={[0, -2, 0]}
                         center
@@ -135,7 +137,7 @@ export default function StockPlanet({ ticker, price, changePercent, position }: 
                         className="pointer-events-none select-none"
                     >
                         <div className="text-[12px] font-mono whitespace-nowrap px-3 py-1 rounded bg-black/80 border border-white/5 text-gray-300 backdrop-blur-md">
-                            PRICE_STK: <span className="text-white">${price.toLocaleString()}</span>
+                            PRICE_STK: <span className="text-white">${(price || 0).toLocaleString()}</span>
                         </div>
                     </Html>
                 )}

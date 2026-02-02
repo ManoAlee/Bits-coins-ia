@@ -21,7 +21,7 @@ export default function IntelligenceTerminal() {
         setResponse(null);
 
         try {
-            const res = await fetch('http://localhost:8000/research', {
+            const res = await fetch('http://localhost:8081/research', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query }),
@@ -32,7 +32,7 @@ export default function IntelligenceTerminal() {
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            setResponse(data);
+            setResponse(data as { answer: string; source: string });
         } catch (err: any) {
             setError(err.message || 'Transmission Failed');
         } finally {
@@ -82,8 +82,8 @@ export default function IntelligenceTerminal() {
 
                             {response && (
                                 <div className="text-gray-200 animate-in fade-in slide-in-from-bottom-2">
-                                    <p className="text-xs text-cyan-500 mb-1">> INCOMING TRANSMISSION:</p>
-                                    <div className="prose prose-invert prose-xs leading-relaxed">
+                                    <p className="text-xs text-cyan-500 mb-1">&gt; INCOMING TRANSMISSION:</p>
+                                    <div className="text-xs leading-relaxed opacity-90">
                                         {response.answer}
                                     </div>
                                     <div className="text-[10px] text-gray-500 mt-2 text-right">
