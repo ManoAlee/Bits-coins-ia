@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as THREE from 'three'
 
 // Configuration
-const API_URL = 'http://127.0.0.1:8081'
+import { API_URL } from '@/libs/constants'
 
 const UNIVERSES = [
     { id: "BOOLE", label: "Boole", desc: "Binary Lógic" },

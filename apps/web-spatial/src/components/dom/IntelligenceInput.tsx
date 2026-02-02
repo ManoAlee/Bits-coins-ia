@@ -5,6 +5,7 @@ import HolographicChart from './HolographicChart';
 import { useUniverseStore } from '@/shared/store/useUniverseStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Sparkles, Zap } from 'lucide-react';
+import { API_URL } from '@/libs/constants';
 
 export default function IntelligenceInput() {
     const [query, setQuery] = useState('');
@@ -27,7 +28,7 @@ export default function IntelligenceInput() {
 
             if (tickerMatch && tickerMatch[1]) {
                 const ticker = tickerMatch[1];
-                fetch(`http://localhost:8081/quant/chart/${ticker}`)
+                fetch(`${API_URL}/quant/chart/${ticker}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.data) setChartData(data);
@@ -36,7 +37,7 @@ export default function IntelligenceInput() {
             }
 
             // 2. Direct link to the Brain
-            const res = await fetch('http://localhost:8081/research', {
+            const res = await fetch(`${API_URL}/research`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query }),

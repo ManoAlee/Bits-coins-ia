@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/libs/utils';
 import { Search, Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { API_URL } from '@/libs/constants';
 
 export default function IntelligenceTerminal() {
     const [query, setQuery] = useState('');
@@ -21,7 +22,7 @@ export default function IntelligenceTerminal() {
         setResponse(null);
 
         try {
-            const res = await fetch('http://localhost:8081/research', {
+            const res = await fetch(`${API_URL}/research`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ query }),
