@@ -1,70 +1,98 @@
-# PROMETHEUS-X <---> STATIC-VOID
-## The Dialectical Synthesis of Financial Intelligence
+# 🌌 Bits-coins-ia: The Financial Multiverse
+## High-Fidelity Autonomous Financial Intelligence
 
-[![Security Protocol](https://img.shields.io/badge/Security-Fortified-success)](https://github.com/alessandro-meneses/bitscoins)
-[![Vision Layer](https://img.shields.io/badge/Vision-Hyper--Reality-cyan)](https://github.com/alessandro-meneses/bitscoins)
-[![Order Layer](https://img.shields.io/badge/Order-Brutalist-green)](https://github.com/alessandro-meneses/bitscoins)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/ManoAlee/Bits-coins-ia)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ManoAlee/Bits-coins-ia)
+[![React](https://img.shields.io/badge/frontend-Next.js%2015-black)](https://nextjs.org/)
+[![Python](https://img.shields.io/badge/backend-Python%203.14-yellow)](https://www.python.org/)
 
-> "In the heart of the singularity, chaos is simply order we haven't decoded yet."
-
----
-
-### 🌌 The Dual Universe Modality
-This system is not a dashboard; it is a **Reality Bridge**. Built on the principle of the **Dialectical Synthesis**, it allows users to fluctuate between two extreme states of operational consciousness.
-
-| Modality | **PROMETHEUS-X** (The Chaos) | **STATIC-VOID** (The Order) |
-| :--- | :--- | :--- |
-| **Philosophy** | Sensory Saturation & Intuition | Brutalist Efficiency & Precision |
-| **Interface** | 3D Generative Hyper-Reality (R3F) | Monochrome Terminal (Brutalist TUI) |
-| **Latency** | Immersive (Buffered) | Critical (Zero-State) |
-| **Sound** | Procedural Neuro-Bridge Audio | Silent Operational Focus |
-| **Primary Interaction** | Gaze, Gesture, Neuro-Input | Command-Line, Key-Shortcuts (Vim-style) |
+**Bits-coins-ia** is not just a trading bot; it is a **Multiversal Reality Bridge** designed to synthesize complex financial data into actionable, value-driven intelligence. By blending immersive 3D spatial environments with a brutalist, high-frequency execution layer, it empowers users to navigate the singularity of modern markets.
 
 ---
 
-### 🚀 Key Features
-#### 1. The Neuro-Bridge (Vision Layer)
-An immersive spatial web experience using **React Three Fiber** and **Post-processing**. Stock data is materialized as unique planetary bodies whose physics and shaders react to market volatility in real-time.
+## 🚀 Vision & Philosophy
 
-#### 2. The Bunker Mode (Operational Layer)
-Shift your reality instantly with `CTRL + V`. Strips away the "Bloat" to reveal a high-frequency, low-latency terminal. Perfect for critical execution within the "Bunker".
+In an era of information entropy, **Bits-coins-ia** provides a stabilized lens through which to observe and interact with financial reality. Our architecture is built on three pillars:
 
-#### 3. Intelligence Orchestration
-Powered by a monorepo architecture with **Next.js 15**, **Python 3.14**, and a custom **Core Agents** package. The AI doesn't just display data; it "breathes" through the interface atmosphere.
+1.  **Value-Driven Intelligence**: We don't just track data; we measure the REAL impact and time saved by autonomous decisions.
+2.  **Immersive Observation**: Market volatility is materialized as physical phenomena (R3F), allowing for intuitive pattern recognition.
+3.  **Brutalist Precision**: When it's time to execute, every millisecond counts. Our "Bunker Mode" offers zero-latency operational focus.
 
 ---
 
-### 🛠️ Tech Stack (The Infrastructure)
-- **Frontend**: Next.js 14/15, Tailwind CSS, Framer Motion.
-- **Rendering**: Three.js, React Three Fiber, React Three Drei.
-- **Audio**: Procedural Web Audio API Synthesis.
-- **State**: Zustand (Multi-Universe Sync).
-- **Backend/AI**: Python Core Agents, LangChain, OpenAI.
+## 🛠️ The Tech Stack
+
+### High-Fidelity Frontend (`apps/web-spatial`)
+- **Next.js 15 (App Router)**: The backbone of our spatial web architecture.
+- **React Three Fiber (R3F)**: Powering the generative 3D multiverse.
+- **Tailwind CSS & Framer Motion**: Ensuring a premium, fluid aesthetic.
+- **Zustand**: Managing multi-universe state synchronization.
+
+### Autonomous Backend (`packages/core-agents`)
+- **FastAPI**: A high-performance, asynchronous bridge between agents.
+- **Agent Swarm**: Specialized units for Research, Quant analysis, and Market sensor reading.
+- **Reality Tracker**: A persistent metrics layer validating ROI and prediction accuracy in real-time.
+- **SQLAlchemy (Async)**: Robust persistence for decision histories.
 
 ---
 
-### ⚡ Quick Start
+## 💎 Features
+
+### 1. The Reality Dashboard
+Track real-time ROI, time saved, and prediction accuracy. Our "Value Proof" system ensures that every decision made by the AI is measurable and auditable.
+
+### 2. Autonomous Oracle
+A continuous market scanner that analyzes tickers (BTC, ETH, SOL) using multi-dimensional research and quantitative modeling, automatically generating validated decisions.
+
+### 3. Unified Agent Protocol (UAV)
+Every decision is validated through a rigorous mathematical and physical protocol, ensuring that the machine's "reasoning" is sound before execution.
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+- Node.js (v18+)
+- Python (3.12+)
+- Git
+
+### Installation
+
 ```bash
-# Clone the singularity
-git clone https://github.com/alessandro-meneses/bitscoins.git
+# 1. Clone the repository
+git clone https://github.com/ManoAlee/Bits-coins-ia.git
+cd Bits-coins-ia
 
-# Enter the bridge
-cd financial-universe-monorepo
-
-# Materialize dependencies
-npm install
-
-# Boot the universe
+# 2. Setup the Frontend
+cd apps/web-spatial
+npm install --legacy-peer-deps
 npm run dev
+
+# 3. Setup the Backend (in a new terminal)
+cd packages/core-agents
+pip install -r requirements.txt
+python -m uvicorn main:app --host 127.0.0.1 --port 8081 --reload
 ```
 
 ---
 
-### 🔒 Security Protocol
-All dependencies are audited and fortified. We prioritize **Stability Absolute** and **Precision Unfettered**. 
+## 📂 Project Structure
+
+```text
+├── apps/
+│   └── web-spatial/          # Next.js 15 Frontend (The Vision)
+├── packages/
+│   └── core-agents/         # Python FastAPI Backend (The Brain)
+├── openclaw/                # Specialized Skill Modules
+└── scripts/                 # Operational Utilities
+```
 
 ---
 
-**Built by the algorithm, for the pilots of the future.**
+## 🛡️ Security & Stability
+We prioritize **Stability Absolute**. All core systems include global exception handlers and CORS fortification to ensure continuous availability even in volatile environments.
 
-[Join the Discord](https://discord.gg/your-link) | [Documentation](https://github.com/alessandro-meneses/bitscoins/wiki)
+---
+
+**Developed for the architects of the new financial reality.**
+[Join the Movement](https://github.com/ManoAlee/Bits-coins-ia) | [Contribute](https://github.com/ManoAlee/Bits-coins-ia/pulls)
