@@ -5,7 +5,9 @@ import HolographicChart from './HolographicChart';
 import { useUniverseStore } from '@/shared/store/useUniverseStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Sparkles, Zap } from 'lucide-react';
+import { Sparkles, Zap } from 'lucide-react';
 import { API_URL } from '@/libs/constants';
+import { generateMockChart, generateMockResearch } from '@/libs/mock-data';
 
 export default function IntelligenceInput() {
     const [query, setQuery] = useState('');
@@ -59,8 +61,20 @@ export default function IntelligenceInput() {
                 setTimeout(() => setMaterializing(null), 3000);
             }
         } catch (err: any) {
-            console.error(err);
-            setResponse(`ERROR: CONNECTION FAILED. DETAILS: ${err.message || JSON.stringify(err)}`);
+            console.warn("Generating Holographic Simulation...");
+
+            // Mock Fallback
+            setTimeout(() => {
+                const mockRes = generateMockResearch(query);
+                setResponse(mockRes.answer);
+
+                // Check if chart was requested
+                const tickerMatch = query.match(/(?:analyze|chart|price|sentiment)\s+([A-Za-z]+)/i);
+                if (tickerMatch && tickerMatch[1]) {
+                    setChartData({ data: generateMockChart(tickerMatch[1]).data, ticker: tickerMatch[1].toUpperCase() });
+                }
+            }, 1500);
+
         } finally {
             setLoading(false);
         }

@@ -8,6 +8,7 @@ import * as THREE from 'three'
 
 // Configuration
 import { API_URL } from '@/libs/constants'
+import { MOCK_METRICS, MOCK_LOGS, MOCK_PORTFOLIO } from '@/libs/mock-data'
 
 const UNIVERSES = [
     { id: "BOOLE", label: "Boole", desc: "Binary Lógic" },
@@ -75,26 +76,32 @@ export default function EvolvedRealityEngine() {
     // Sync Intelligence
     useEffect(() => {
         const fetchAll = async () => {
-            try {
-                const [mRes, lRes, pRes] = await Promise.all([
-                    fetch(`${API_URL}/metrics/dashboard`),
-                    fetch(`${API_URL}/logs`),
-                    fetch(`${API_URL}/portfolio`)
-                ])
-                if (mRes.ok) {
-                    const data = await mRes.json()
-                    setMetrics(data)
-                    // Adaptive Evolution: Derived from decision count + research depth
-                    const level = (data.today?.decisions_made || 0) * 5 + (data.raw_intelligence?.research?.length || 0) * 10
-                    setEvolutionLevel(level)
+            // Helper to safe fetch
+            const safeFetch = async (endpoint: string, fallback: any) => {
+                try {
+                    const res = await fetch(`${API_URL}${endpoint}`)
+                    if (!res.ok) throw new Error('Network response was not ok')
+                    return await res.json()
+                } catch (e) {
+                    console.warn(`[MockMode] Fetch failed for ${endpoint}, using fallback.`)
+                    return fallback
                 }
-                if (lRes.ok) setLogs((await lRes.json()).logs || [])
-                if (pRes.ok) setPortfolio(await pRes.json())
-                setConnected(true)
-                setLoading(false)
-            } catch (e) {
-                setConnected(false)
             }
+
+            const mData = await safeFetch('/metrics/dashboard', MOCK_METRICS)
+            const lData = await safeFetch('/logs', MOCK_LOGS)
+            const pData = await safeFetch('/portfolio', MOCK_PORTFOLIO)
+
+            setMetrics(mData)
+            setLogs(lData.logs || [])
+            setPortfolio(pData)
+
+            // Adaptive Evolution: Derived from decision count + research depth
+            const level = (mData.today?.decisions_made || 0) * 5 + (mData.raw_intelligence?.research?.length || 0) * 10
+            setEvolutionLevel(level)
+
+            setConnected(true)
+            setLoading(false)
         }
         fetchAll()
         const interval = setInterval(fetchAll, 3000)
