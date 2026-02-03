@@ -53,6 +53,17 @@ const THEMES: Record<string, any> = {
     DOGE: { color: "#C2A633", geometry: "octahedron", label: "Meme Singularity", desc: "Social Sentiment Driven" }
 }
 
+const TECH_STACK = [
+    { label: 'Next.js 15', detail: 'App Router + Edge UX' },
+    { label: 'React Three Fiber', detail: 'Spatial Canvas Core' },
+    { label: 'Framer Motion', detail: 'Kinetic Transitions' },
+    { label: 'Zustand', detail: 'State Synchrony' },
+    { label: 'FastAPI', detail: 'Async Brain Link' },
+    { label: 'SQLAlchemy', detail: 'Persistent Memory' },
+    { label: 'WebSockets', detail: 'Realtime Streams' },
+    { label: 'OpenAI Tools', detail: 'Adaptive Reasoning' }
+]
+
 export default function EvolvedRealityEngine() {
     // Core State
     const [metrics, setMetrics] = useState<any>(null)
@@ -69,9 +80,19 @@ export default function EvolvedRealityEngine() {
     const [analyzing, setAnalyzing] = useState(false)
     const [activeResearch, setActiveResearch] = useState<any>(null)
     const [evolutionLevel, setEvolutionLevel] = useState(0)
+    const [focusMode, setFocusMode] = useState(false)
+    const [logFilter, setLogFilter] = useState('ALL')
 
     const theme = useMemo(() => THEMES[selectedTicker] || THEMES.BTC, [selectedTicker])
+    const decisionCount = metrics?.today?.decisions_made ?? 0
+    const researchCount = metrics?.raw_intelligence?.research?.length ?? 0
     const logEndRef = useRef<HTMLDivElement>(null)
+    const chatInputRef = useRef<HTMLInputElement>(null)
+
+    const filteredLogs = useMemo(() => {
+        if (logFilter === 'ALL') return logs
+        return logs.filter((log) => log.includes(`[${logFilter}]`))
+    }, [logs, logFilter])
 
     // Sync Intelligence
     useEffect(() => {
@@ -214,6 +235,11 @@ export default function EvolvedRealityEngine() {
         }
     }
 
+    const applyPrompt = (prompt: string) => {
+        setChatInput(prompt)
+        requestAnimationFrame(() => chatInputRef.current?.focus())
+    }
+
     return (
         <div className="w-screen h-screen bg-black text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative flex flex-col lg:block">
             {/* DYNAMIC AMBIENT BACKGROUND */}
@@ -256,9 +282,29 @@ export default function EvolvedRealityEngine() {
 
             {/* SCROLLABLE CONTENT LAYER (Mobile) / OVERLAY (Desktop) */}
             <div className="relative z-10 w-full h-full overflow-y-auto lg:overflow-hidden flex flex-col lg:block pointer-events-none">
+                {/* STATUS RIBBON */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 w-full flex justify-center px-4 pointer-events-none">
+                    <div className="pointer-events-auto flex flex-wrap items-center gap-3 bg-black/60 border border-white/10 backdrop-blur-2xl rounded-full px-4 py-2 text-[10px] font-mono uppercase tracking-[0.2em] text-white/70 shadow-lg">
+                        <span className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-red-500'}`} />
+                            Link {connected ? 'Synced' : 'Offline'}
+                        </span>
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <span className="font-black text-white">{theme.label}</span>
+                        <span className="hidden md:inline text-white/50">{theme.desc}</span>
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <span className="text-cyan-300">Lvl {evolutionLevel}</span>
+                        {focusMode && (
+                            <>
+                                <span className="hidden sm:inline text-white/20">|</span>
+                                <span className="text-amber-300">Focus Mode</span>
+                            </>
+                        )}
+                    </div>
+                </div>
 
                 {/* HEADER / LEFT PANEL */}
-                <div className="w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:left-0 lg:top-0 pointer-events-none">
+                <div className={`w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:left-0 lg:top-0 pointer-events-none ${focusMode ? 'lg:opacity-20 lg:pointer-events-none' : ''}`}>
                     <motion.div
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -271,6 +317,20 @@ export default function EvolvedRealityEngine() {
                         <div className="flex gap-3 ml-7 mt-1 align-baseline">
                             <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-widest bg-cyan-950/30 border border-cyan-800/30 px-2 py-0.5 rounded">Lvl {evolutionLevel}</span>
                             <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] self-center">Alpha Node</p>
+                        </div>
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                            <button
+                                onClick={() => setFocusMode((prev) => !prev)}
+                                className={`px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${focusMode ? 'bg-amber-400/10 border-amber-400/40 text-amber-200' : 'bg-white/5 border-white/15 text-white/50 hover:text-white'}`}
+                            >
+                                {focusMode ? 'Exit Focus' : 'Focus Mode'}
+                            </button>
+                            <button
+                                onClick={() => applyPrompt(`Status do portfólio ${selectedTicker} e próximos passos.`)}
+                                className="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-cyan-500/30 text-cyan-200 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all"
+                            >
+                                Quick Query
+                            </button>
                         </div>
                     </motion.div>
 
@@ -293,6 +353,62 @@ export default function EvolvedRealityEngine() {
                         </div>
                     </motion.div>
 
+                    {/* Pulse Strip */}
+                    <div className="pointer-events-auto grid grid-cols-3 gap-3">
+                        <SignalMetric label="Decisions" value={decisionCount.toLocaleString()} accent="text-cyan-300" />
+                        <SignalMetric label="Research" value={researchCount.toString()} accent="text-purple-300" />
+                        <SignalMetric label="Time Saved" value={`+${metrics?.today?.time_saved_hours || 0}H`} accent="text-emerald-300" />
+                    </div>
+
+                    {/* System Logs */}
+                    <div className="pointer-events-auto bg-zinc-950/50 border border-white/10 rounded-3xl p-5 backdrop-blur-2xl shadow-xl">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">System Log</span>
+                            <span className="text-[9px] font-mono text-white/30">{filteredLogs.length} Events</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {['ALL', 'SYSTEM', 'INFO', 'SUCCESS'].map((filter) => (
+                                <button
+                                    key={filter}
+                                    onClick={() => setLogFilter(filter)}
+                                    className={`px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${logFilter === filter ? 'bg-white text-black border-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'}`}
+                                >
+                                    {filter}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="space-y-2 text-[10px] text-white/70 font-mono max-h-[120px] overflow-y-auto scrollbar-hide pr-1">
+                            {filteredLogs.slice(-4).map((log, index) => (
+                                <div key={`${log}-${index}`} className="flex items-start gap-2">
+                                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-500/60" />
+                                    <p className="leading-relaxed">{log}</p>
+                                </div>
+                            ))}
+                            {filteredLogs.length === 0 && (
+                                <div className="text-white/30 italic">Awaiting telemetry...</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Technology Stack */}
+                    <div className="pointer-events-auto bg-zinc-950/50 border border-white/10 rounded-3xl p-5 backdrop-blur-2xl shadow-xl">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">Technology Core</span>
+                            <span className="text-[9px] font-mono text-white/30">{TECH_STACK.length} Modules</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            {TECH_STACK.map((tech) => (
+                                <div
+                                    key={tech.label}
+                                    className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-left transition-all hover:border-cyan-400/40 hover:bg-cyan-500/10"
+                                >
+                                    <div className="text-[10px] font-bold text-white/80">{tech.label}</div>
+                                    <div className="text-[9px] text-white/40">{tech.detail}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Desktop: Bottom Left Box (Multiverse) */}
                     <div className="hidden lg:block pointer-events-auto">
                         <MultiverseBox metrics={metrics} />
@@ -301,7 +417,7 @@ export default function EvolvedRealityEngine() {
 
 
                 {/* RIGHT PANEL (Stats) */}
-                <div className="w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:right-0 lg:top-0 pointer-events-none">
+                <div className={`w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:right-0 lg:top-0 pointer-events-none ${focusMode ? 'lg:opacity-20 lg:pointer-events-none' : ''}`}>
 
                     {/* Portfolio Card */}
                     <motion.div
@@ -415,11 +531,29 @@ export default function EvolvedRealityEngine() {
                             )}
                         </AnimatePresence>
 
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {[
+                                'Avaliar risco nas próximas 24h',
+                                'Resumo macro BTC/ETH',
+                                'Sinais de volatilidade extrema',
+                                'Plano de alocação conservador'
+                            ].map((prompt) => (
+                                <button
+                                    key={prompt}
+                                    type="button"
+                                    onClick={() => applyPrompt(prompt)}
+                                    className="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all"
+                                >
+                                    {prompt}
+                                </button>
+                            ))}
+                        </div>
                         <form onSubmit={handleChat} className="relative group">
                             <input
                                 type="text"
                                 value={chatInput}
                                 onChange={(e) => setChatInput(e.target.value)}
+                                ref={chatInputRef}
                                 placeholder="Query the system or request validation..."
                                 className="w-full bg-black/60 border border-white/20 rounded-2xl py-4 pl-6 pr-12 text-sm focus:outline-none focus:border-white/50 focus:bg-black/80 transition-all backdrop-blur-xl shadow-2xl font-medium placeholder:text-white/20 group-hover:border-white/30"
                             />
@@ -509,6 +643,15 @@ function KpiCard({ label, value, color }: any) {
         <div className="p-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md text-center hover:bg-white/10 transition-colors">
             <div className="text-[9px] text-white/30 font-mono mb-1 uppercase tracking-wider">{label}</div>
             <div className={`text-xl font-black ${color}`}>{value}</div>
+        </div>
+    )
+}
+
+function SignalMetric({ label, value, accent }: any) {
+    return (
+        <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-4 text-center backdrop-blur-md shadow-lg">
+            <div className="text-[9px] font-mono uppercase tracking-wider text-white/40">{label}</div>
+            <div className={`mt-2 text-lg font-black ${accent}`}>{value}</div>
         </div>
     )
 }
