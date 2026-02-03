@@ -93,6 +93,9 @@ export default function EvolvedRealityEngine() {
     const [aetherVision, setAetherVision] = useState('Escalabilidade + segurança pós-quântica')
     const [aetherPrompt, setAetherPrompt] = useState('')
     const [copiedPrompt, setCopiedPrompt] = useState(false)
+    const [createdAssets, setCreatedAssets] = useState<
+        Array<{ name: string; ticker: string; supply: string; vision: string; timestamp: string }>
+    >([])
 
     const theme = useMemo(() => THEMES[selectedTicker] || THEMES.BTC, [selectedTicker])
     const decisionCount = metrics?.today?.decisions_made ?? 0
@@ -286,6 +289,21 @@ export default function EvolvedRealityEngine() {
         } catch (error) {
             console.warn('Clipboard unavailable', error)
         }
+    }
+
+    const handleCreateAsset = () => {
+        const newAsset = {
+            name: aetherName.trim() || 'AetherBit',
+            ticker: (aetherTicker.trim() || 'AETH').toUpperCase(),
+            supply: aetherSupply.trim() || '21000000',
+            vision: aetherVision.trim() || 'Escalabilidade + segurança pós-quântica',
+            timestamp: new Date().toISOString()
+        }
+        setCreatedAssets((prev) => [newAsset, ...prev].slice(0, 5))
+        setLogs((prev) => [
+            ...prev,
+            `[SUCCESS] AetherBit Forge: ${newAsset.ticker} criado com supply ${newAsset.supply}.`
+        ])
     }
 
     return (
@@ -646,12 +664,45 @@ export default function EvolvedRealityEngine() {
                                     Generate Super Prompt
                                 </button>
                                 <button
+                                    onClick={handleCreateAsset}
+                                    className="px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border border-emerald-400/40 text-emerald-200 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all"
+                                >
+                                    Create Asset
+                                </button>
+                                <button
                                     onClick={handleCopyPrompt}
                                     disabled={!aetherPrompt}
                                     className="px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                                 >
                                     {copiedPrompt ? 'Copied' : 'Copy Prompt'}
                                 </button>
+                            </div>
+                            <div className="mt-3 rounded-2xl border border-white/10 bg-black/40 p-3">
+                                <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-white/40 mb-2">
+                                    <span>Created Assets</span>
+                                    <span>{createdAssets.length} / 5</span>
+                                </div>
+                                <div className="space-y-2 text-[10px] text-white/70">
+                                    {createdAssets.length === 0 ? (
+                                        <p className="text-white/30 italic">Nenhum ativo criado ainda.</p>
+                                    ) : (
+                                        createdAssets.map((asset) => (
+                                            <div
+                                                key={`${asset.ticker}-${asset.timestamp}`}
+                                                className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 py-2"
+                                            >
+                                                <div>
+                                                    <div className="font-bold text-white/80">{asset.name}</div>
+                                                    <div className="text-white/40">{asset.vision}</div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="font-mono text-white/80">{asset.ticker}</div>
+                                                    <div className="text-white/40">Max {asset.supply}</div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
                             </div>
                             <textarea
                                 value={aetherPrompt}
