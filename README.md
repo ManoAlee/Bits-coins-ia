@@ -10,6 +10,23 @@
 
 ---
 
+## 🪐 Universe Overview
+Bits-coins-ia is a living system with four interlocked dimensions. Each dimension operates independently, but the full experience emerges when they are synchronized:
+
+1. **The Spatial Plane (Frontend Multiverse)**  
+   A next-generation interface that renders market reality as a 3D system. It is optimized for high-velocity perception and fast decisions.
+
+2. **The Cognitive Plane (Agent Core)**  
+   A swarm of autonomous agents that reason, measure ROI, and validate decisions before execution.
+
+3. **The Temporal Plane (Execution + Metrics)**  
+   Where latency, throughput, and time-saved are measured continuously to preserve the integrity of the system.
+
+4. **The Memory Plane (Persistence)**  
+   A persistent store of decisions, metrics, and research used to refine strategy over time.
+
+---
+
 ## 🚀 Vision & Philosophy
 
 In an era of information entropy, **Bits-coins-ia** provides a stabilized lens through which to observe and interact with financial reality. Our architecture is built on three pillars:
@@ -48,6 +65,13 @@ A continuous market scanner that analyzes tickers (BTC, ETH, SOL) using multi-di
 Every decision is validated through a rigorous mathematical and physical protocol, ensuring that the machine's "reasoning" is sound before execution.
 
 ---
+
+## 🧭 Navigation Guide (Universe Quickstart)
+If you want to experience the platform as a full “universe”:
+1. Start the **frontend** and observe the **Spatial Plane**.  
+2. Start the **backend** and activate the **Cognitive Plane**.  
+3. Watch the **Temporal Plane** metrics update in real time.  
+4. Review persisted decisions to see the **Memory Plane** improve accuracy.
 
 ## ⚡ Quick Start
 

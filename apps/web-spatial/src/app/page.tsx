@@ -53,6 +53,17 @@ const THEMES: Record<string, any> = {
     DOGE: { color: "#C2A633", geometry: "octahedron", label: "Meme Singularity", desc: "Social Sentiment Driven" }
 }
 
+const TECH_STACK = [
+    { label: 'Next.js 15', detail: 'App Router + Edge UX' },
+    { label: 'React Three Fiber', detail: 'Spatial Canvas Core' },
+    { label: 'Framer Motion', detail: 'Kinetic Transitions' },
+    { label: 'Zustand', detail: 'State Synchrony' },
+    { label: 'FastAPI', detail: 'Async Brain Link' },
+    { label: 'SQLAlchemy', detail: 'Persistent Memory' },
+    { label: 'WebSockets', detail: 'Realtime Streams' },
+    { label: 'OpenAI Tools', detail: 'Adaptive Reasoning' }
+]
+
 export default function EvolvedRealityEngine() {
     // Core State
     const [metrics, setMetrics] = useState<any>(null)
@@ -69,9 +80,50 @@ export default function EvolvedRealityEngine() {
     const [analyzing, setAnalyzing] = useState(false)
     const [activeResearch, setActiveResearch] = useState<any>(null)
     const [evolutionLevel, setEvolutionLevel] = useState(0)
+    const [focusMode, setFocusMode] = useState(false)
+    const [logFilter, setLogFilter] = useState('ALL')
+    const [operationMode, setOperationMode] = useState<'AUTO' | 'ASSIST' | 'STEALTH'>('AUTO')
+    const [autoRotateEnabled, setAutoRotateEnabled] = useState(true)
+    const [rotationSpeed, setRotationSpeed] = useState(0.5)
+    const [sparkleDensity, setSparkleDensity] = useState(70)
+    const [motionLevel, setMotionLevel] = useState(70)
+    const [aetherName, setAetherName] = useState('AetherBit')
+    const [aetherTicker, setAetherTicker] = useState('AETH')
+    const [aetherSupply, setAetherSupply] = useState('21000000')
+    const [aetherVision, setAetherVision] = useState('Escalabilidade + segurança pós-quântica')
+    const [aetherPrompt, setAetherPrompt] = useState('')
+    const [copiedPrompt, setCopiedPrompt] = useState(false)
 
     const theme = useMemo(() => THEMES[selectedTicker] || THEMES.BTC, [selectedTicker])
+    const decisionCount = metrics?.today?.decisions_made ?? 0
+    const researchCount = metrics?.raw_intelligence?.research?.length ?? 0
     const logEndRef = useRef<HTMLDivElement>(null)
+    const chatInputRef = useRef<HTMLInputElement>(null)
+
+    const sparkleConfig = useMemo(() => {
+        const count = Math.round(80 + sparkleDensity * 4)
+        const opacity = Math.min(0.4, 0.1 + sparkleDensity / 300)
+        const size = Math.min(3, 1 + sparkleDensity / 80)
+        return { count, opacity, size }
+    }, [sparkleDensity])
+
+    const motionDuration = useMemo(() => Math.max(2, 6 - motionLevel / 25), [motionLevel])
+
+    const filteredLogs = useMemo(() => {
+        if (logFilter === 'ALL') return logs
+        return logs.filter((log) => log.includes(`[${logFilter}]`))
+    }, [logs, logFilter])
+
+    const signalMatrix = useMemo(() => {
+        const accuracy = metrics?.today?.accuracy ?? 0
+        const stability = Math.min(100, 40 + (decisionCount * 0.2) + (researchCount * 1.5))
+        const momentum = Math.min(100, 30 + (metrics?.today?.time_saved_hours ?? 0) * 5)
+        return [
+            { label: 'Accuracy', value: accuracy, tone: 'bg-emerald-400' },
+            { label: 'Stability', value: stability, tone: 'bg-cyan-400' },
+            { label: 'Momentum', value: momentum, tone: 'bg-purple-400' }
+        ]
+    }, [metrics, decisionCount, researchCount])
 
     // Sync Intelligence
     useEffect(() => {
@@ -214,6 +266,28 @@ export default function EvolvedRealityEngine() {
         }
     }
 
+    const applyPrompt = (prompt: string) => {
+        setChatInput(prompt)
+        requestAnimationFrame(() => chatInputRef.current?.focus())
+    }
+
+    const buildAetherPrompt = () => {
+        const superPrompt = `Atue como um Engenheiro de Sistemas de Defesa e Criptógrafo Pós-Quântico. > Objetivo: Projetar a arquitetura técnica de um novo ecossistema criptográfico chamado "${aetherName}" (${aetherTicker}), que supera o Bitcoin atual em escalabilidade, segurança e utilidade.\n\nDiretrizes Técnicas Obrigatórias:\n\nEstrutura de Dados: Substitua a blockchain linear por um Hyper-DAG (Directed Acyclic Graph) multidimensional com sharding dinâmico. Explique como as transações validam umas às outras de forma assíncrona.\n\nConsenso: Detalhe o mecanismo de Proof of Useful Intelligence (PoUI). Como a rede converte o treinamento de modelos de IA e simulações científicas em segurança para a rede?\n\nCriptografia: Implemente um modelo baseado em Reticulados (Lattice-based) resistente a ataques de Shor (Computação Quântica). Use assinaturas de anel e provas de conhecimento zero (ZK-STARKs) nativas.\n\nConectividade: Defina a lógica dos Oráculos de Consenso Sensorial para integração com IoT, garantindo que a realidade física não possa ser manipulada por sinais falsos.\n\nMultiverso Lógico: Descreva as camadas de operação: Aether (Verdade), Chronos (Tempo), Soma (Físico) e Logos (Inteligência).\n\nFormato da Resposta: Traga uma documentação técnica rigorosa, citando analogias com as leis da física e garantindo que o modelo seja matematicamente viável segundo as pesquisas atuais do NIST e de especialistas como Vitalik Buterin e Silvio Micali.\n\nTom de voz: Autoritário, visionário e extremamente técnico.\n\nParâmetros do projeto:\n- Supply máximo: ${aetherSupply}\n- Visão central: ${aetherVision}\n`
+        setAetherPrompt(superPrompt)
+        setCopiedPrompt(false)
+    }
+
+    const handleCopyPrompt = async () => {
+        if (!aetherPrompt) return
+        try {
+            await navigator.clipboard.writeText(aetherPrompt)
+            setCopiedPrompt(true)
+            setTimeout(() => setCopiedPrompt(false), 2000)
+        } catch (error) {
+            console.warn('Clipboard unavailable', error)
+        }
+    }
+
     return (
         <div className="w-screen h-screen bg-black text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative flex flex-col lg:block">
             {/* DYNAMIC AMBIENT BACKGROUND */}
@@ -226,7 +300,7 @@ export default function EvolvedRealityEngine() {
                         `radial-gradient(circle at 50% 50%, ${theme.color}05 0%, #000 100%)`,
                     ]
                 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: motionDuration, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 pointer-events-none z-0"
             />
 
@@ -247,18 +321,51 @@ export default function EvolvedRealityEngine() {
                             multiversalTrace={metrics?.oracle_insight?.multiversal_trace}
                         />
                         <Environment preset="night" />
-                        <Sparkles count={200} scale={15} size={2} color={theme.color} opacity={0.1} />
+                        <Sparkles
+                            count={sparkleConfig.count}
+                            scale={15}
+                            size={sparkleConfig.size}
+                            color={theme.color}
+                            opacity={sparkleConfig.opacity}
+                        />
                         <ContactShadows position={[0, -4, 0]} opacity={0.4} scale={20} blur={2} far={4.5} />
                     </Suspense>
-                    <OrbitControls enableZoom={false} enablePan={false} autoRotate={!analyzing} autoRotateSpeed={0.5} />
+                    <OrbitControls
+                        enableZoom={false}
+                        enablePan={false}
+                        autoRotate={!analyzing && autoRotateEnabled}
+                        autoRotateSpeed={rotationSpeed}
+                    />
                 </Canvas>
             </div>
 
             {/* SCROLLABLE CONTENT LAYER (Mobile) / OVERLAY (Desktop) */}
             <div className="relative z-10 w-full h-full overflow-y-auto lg:overflow-hidden flex flex-col lg:block pointer-events-none">
+                {/* STATUS RIBBON */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 w-full flex justify-center px-4 pointer-events-none">
+                    <div className="pointer-events-auto flex flex-wrap items-center gap-3 bg-black/60 border border-white/10 backdrop-blur-2xl rounded-full px-4 py-2 text-[10px] font-mono uppercase tracking-[0.2em] text-white/70 shadow-lg">
+                        <span className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full ${connected ? 'bg-emerald-400' : 'bg-red-500'}`} />
+                            Link {connected ? 'Synced' : 'Offline'}
+                        </span>
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <span className="font-black text-white">{theme.label}</span>
+                        <span className="hidden md:inline text-white/50">{theme.desc}</span>
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <span className="text-cyan-300">Lvl {evolutionLevel}</span>
+                        {focusMode && (
+                            <>
+                                <span className="hidden sm:inline text-white/20">|</span>
+                                <span className="text-amber-300">Focus Mode</span>
+                            </>
+                        )}
+                        <span className="hidden sm:inline text-white/20">|</span>
+                        <span className="text-white/60">{operationMode} Ops</span>
+                    </div>
+                </div>
 
                 {/* HEADER / LEFT PANEL */}
-                <div className="w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:left-0 lg:top-0 pointer-events-none">
+                <div className={`w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:left-0 lg:top-0 pointer-events-none ${focusMode ? 'lg:opacity-20 lg:pointer-events-none' : ''}`}>
                     <motion.div
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -271,6 +378,20 @@ export default function EvolvedRealityEngine() {
                         <div className="flex gap-3 ml-7 mt-1 align-baseline">
                             <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-widest bg-cyan-950/30 border border-cyan-800/30 px-2 py-0.5 rounded">Lvl {evolutionLevel}</span>
                             <p className="text-[10px] font-mono text-white/30 uppercase tracking-[0.2em] self-center">Alpha Node</p>
+                        </div>
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                            <button
+                                onClick={() => setFocusMode((prev) => !prev)}
+                                className={`px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${focusMode ? 'bg-amber-400/10 border-amber-400/40 text-amber-200' : 'bg-white/5 border-white/15 text-white/50 hover:text-white'}`}
+                            >
+                                {focusMode ? 'Exit Focus' : 'Focus Mode'}
+                            </button>
+                            <button
+                                onClick={() => applyPrompt(`Status do portfólio ${selectedTicker} e próximos passos.`)}
+                                className="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-cyan-500/30 text-cyan-200 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all"
+                            >
+                                Quick Query
+                            </button>
                         </div>
                     </motion.div>
 
@@ -293,6 +414,62 @@ export default function EvolvedRealityEngine() {
                         </div>
                     </motion.div>
 
+                    {/* Pulse Strip */}
+                    <div className="pointer-events-auto grid grid-cols-3 gap-3">
+                        <SignalMetric label="Decisions" value={decisionCount.toLocaleString()} accent="text-cyan-300" />
+                        <SignalMetric label="Research" value={researchCount.toString()} accent="text-purple-300" />
+                        <SignalMetric label="Time Saved" value={`+${metrics?.today?.time_saved_hours || 0}H`} accent="text-emerald-300" />
+                    </div>
+
+                    {/* System Logs */}
+                    <div className="pointer-events-auto bg-zinc-950/50 border border-white/10 rounded-3xl p-5 backdrop-blur-2xl shadow-xl">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">System Log</span>
+                            <span className="text-[9px] font-mono text-white/30">{filteredLogs.length} Events</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {['ALL', 'SYSTEM', 'INFO', 'SUCCESS'].map((filter) => (
+                                <button
+                                    key={filter}
+                                    onClick={() => setLogFilter(filter)}
+                                    className={`px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${logFilter === filter ? 'bg-white text-black border-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'}`}
+                                >
+                                    {filter}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="space-y-2 text-[10px] text-white/70 font-mono max-h-[120px] overflow-y-auto scrollbar-hide pr-1">
+                            {filteredLogs.slice(-4).map((log, index) => (
+                                <div key={`${log}-${index}`} className="flex items-start gap-2">
+                                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-500/60" />
+                                    <p className="leading-relaxed">{log}</p>
+                                </div>
+                            ))}
+                            {filteredLogs.length === 0 && (
+                                <div className="text-white/30 italic">Awaiting telemetry...</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Technology Stack */}
+                    <div className="pointer-events-auto bg-zinc-950/50 border border-white/10 rounded-3xl p-5 backdrop-blur-2xl shadow-xl">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">Technology Core</span>
+                            <span className="text-[9px] font-mono text-white/30">{TECH_STACK.length} Modules</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                            {TECH_STACK.map((tech) => (
+                                <div
+                                    key={tech.label}
+                                    className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3 text-left transition-all hover:border-cyan-400/40 hover:bg-cyan-500/10"
+                                >
+                                    <div className="text-[10px] font-bold text-white/80">{tech.label}</div>
+                                    <div className="text-[9px] text-white/40">{tech.detail}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Desktop: Bottom Left Box (Multiverse) */}
                     <div className="hidden lg:block pointer-events-auto">
                         <MultiverseBox metrics={metrics} />
@@ -301,7 +478,7 @@ export default function EvolvedRealityEngine() {
 
 
                 {/* RIGHT PANEL (Stats) */}
-                <div className="w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:right-0 lg:top-0 pointer-events-none">
+                <div className={`w-full lg:w-[450px] lg:h-full p-6 lg:p-8 flex flex-col gap-6 lg:justify-between lg:absolute lg:right-0 lg:top-0 pointer-events-none ${focusMode ? 'lg:opacity-20 lg:pointer-events-none' : ''}`}>
 
                     {/* Portfolio Card */}
                     <motion.div
@@ -333,6 +510,155 @@ export default function EvolvedRealityEngine() {
                         <div className="grid grid-cols-2 gap-3">
                             <KpiCard label="Accuracy" value={`${(metrics?.today?.accuracy || 75.0).toFixed(1)}%`} color="text-emerald-400" />
                             <KpiCard label="Time Saved" value={`+${metrics?.today?.time_saved_hours || 0}H`} color="text-amber-400" />
+                        </div>
+
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">Signal Matrix</span>
+                                <span className="text-[9px] font-mono text-white/30">Realtime</span>
+                            </div>
+                            <div className="space-y-3">
+                                {signalMatrix.map((signal) => (
+                                    <SignalBar
+                                        key={signal.label}
+                                        label={signal.label}
+                                        value={signal.value}
+                                        tone={signal.tone}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">Operation Mode</span>
+                                <span className="text-[9px] font-mono text-white/30">Adaptive</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {(['AUTO', 'ASSIST', 'STEALTH'] as const).map((mode) => (
+                                    <button
+                                        key={mode}
+                                        onClick={() => setOperationMode(mode)}
+                                        className={`px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${operationMode === mode ? 'bg-white text-black border-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'}`}
+                                    >
+                                        {mode}
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="mt-3 text-[10px] text-white/40">
+                                {operationMode === 'AUTO'
+                                    ? 'Autonomia total para leitura e execução.'
+                                    : operationMode === 'ASSIST'
+                                        ? 'Sugestões guiadas com confirmação humana.'
+                                        : 'Operação silenciosa com baixa emissão.'}
+                            </p>
+                        </div>
+
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">Control Matrix</span>
+                                <span className="text-[9px] font-mono text-white/30">UX + Motion</span>
+                            </div>
+                            <div className="flex items-center justify-between text-[10px] text-white/60 mb-3">
+                                <span>Auto Rotation</span>
+                                <button
+                                    onClick={() => setAutoRotateEnabled((prev) => !prev)}
+                                    className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${autoRotateEnabled ? 'bg-white text-black border-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/30'}`}
+                                >
+                                    {autoRotateEnabled ? 'On' : 'Off'}
+                                </button>
+                            </div>
+                            <div className="space-y-4">
+                                <RangeControl
+                                    label="Rotation Speed"
+                                    value={rotationSpeed}
+                                    min={0.1}
+                                    max={2}
+                                    step={0.1}
+                                    display={`${rotationSpeed.toFixed(1)}x`}
+                                    onChange={(value) => setRotationSpeed(value)}
+                                />
+                                <RangeControl
+                                    label="Sparkle Density"
+                                    value={sparkleDensity}
+                                    min={20}
+                                    max={100}
+                                    step={5}
+                                    display={`${sparkleDensity}%`}
+                                    onChange={(value) => setSparkleDensity(value)}
+                                />
+                                <RangeControl
+                                    label="Motion Level"
+                                    value={motionLevel}
+                                    min={30}
+                                    max={100}
+                                    step={5}
+                                    display={`${motionLevel}%`}
+                                    onChange={(value) => setMotionLevel(value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">AetherBit Forge</span>
+                                <span className="text-[9px] font-mono text-white/30">Create Your Bitcoin</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 text-[10px] text-white/60">
+                                <label className="flex flex-col gap-2">
+                                    <span className="uppercase tracking-widest">Name</span>
+                                    <input
+                                        value={aetherName}
+                                        onChange={(event) => setAetherName(event.target.value)}
+                                        className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-white focus:outline-none focus:border-cyan-400/60"
+                                    />
+                                </label>
+                                <label className="flex flex-col gap-2">
+                                    <span className="uppercase tracking-widest">Ticker</span>
+                                    <input
+                                        value={aetherTicker}
+                                        onChange={(event) => setAetherTicker(event.target.value.toUpperCase())}
+                                        className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-white focus:outline-none focus:border-cyan-400/60"
+                                    />
+                                </label>
+                                <label className="flex flex-col gap-2">
+                                    <span className="uppercase tracking-widest">Max Supply</span>
+                                    <input
+                                        value={aetherSupply}
+                                        onChange={(event) => setAetherSupply(event.target.value)}
+                                        className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-white focus:outline-none focus:border-cyan-400/60"
+                                    />
+                                </label>
+                                <label className="flex flex-col gap-2">
+                                    <span className="uppercase tracking-widest">Vision</span>
+                                    <input
+                                        value={aetherVision}
+                                        onChange={(event) => setAetherVision(event.target.value)}
+                                        className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-white focus:outline-none focus:border-cyan-400/60"
+                                    />
+                                </label>
+                            </div>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                                <button
+                                    onClick={buildAetherPrompt}
+                                    className="px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border border-cyan-400/40 text-cyan-200 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all"
+                                >
+                                    Generate Super Prompt
+                                </button>
+                                <button
+                                    onClick={handleCopyPrompt}
+                                    disabled={!aetherPrompt}
+                                    className="px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-widest border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                    {copiedPrompt ? 'Copied' : 'Copy Prompt'}
+                                </button>
+                            </div>
+                            <textarea
+                                value={aetherPrompt}
+                                readOnly
+                                placeholder="Seu Super Prompt aparece aqui."
+                                className="mt-3 h-40 w-full rounded-2xl border border-white/10 bg-black/40 px-3 py-3 text-[10px] text-white/70 focus:outline-none"
+                            />
                         </div>
                     </motion.div>
 
@@ -415,11 +741,29 @@ export default function EvolvedRealityEngine() {
                             )}
                         </AnimatePresence>
 
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {[
+                                'Avaliar risco nas próximas 24h',
+                                'Resumo macro BTC/ETH',
+                                'Sinais de volatilidade extrema',
+                                'Plano de alocação conservador'
+                            ].map((prompt) => (
+                                <button
+                                    key={prompt}
+                                    type="button"
+                                    onClick={() => applyPrompt(prompt)}
+                                    className="px-3 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-widest border border-white/10 text-white/50 hover:text-white hover:border-white/30 transition-all"
+                                >
+                                    {prompt}
+                                </button>
+                            ))}
+                        </div>
                         <form onSubmit={handleChat} className="relative group">
                             <input
                                 type="text"
                                 value={chatInput}
                                 onChange={(e) => setChatInput(e.target.value)}
+                                ref={chatInputRef}
                                 placeholder="Query the system or request validation..."
                                 className="w-full bg-black/60 border border-white/20 rounded-2xl py-4 pl-6 pr-12 text-sm focus:outline-none focus:border-white/50 focus:bg-black/80 transition-all backdrop-blur-xl shadow-2xl font-medium placeholder:text-white/20 group-hover:border-white/30"
                             />
@@ -509,6 +853,52 @@ function KpiCard({ label, value, color }: any) {
         <div className="p-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md text-center hover:bg-white/10 transition-colors">
             <div className="text-[9px] text-white/30 font-mono mb-1 uppercase tracking-wider">{label}</div>
             <div className={`text-xl font-black ${color}`}>{value}</div>
+        </div>
+    )
+}
+
+function SignalMetric({ label, value, accent }: any) {
+    return (
+        <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-4 text-center backdrop-blur-md shadow-lg">
+            <div className="text-[9px] font-mono uppercase tracking-wider text-white/40">{label}</div>
+            <div className={`mt-2 text-lg font-black ${accent}`}>{value}</div>
+        </div>
+    )
+}
+
+function SignalBar({ label, value, tone }: any) {
+    return (
+        <div className="space-y-1">
+            <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-white/40">
+                <span>{label}</span>
+                <span className="text-white/60">{Math.round(value)}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                    className={`h-full ${tone}`}
+                    style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
+                />
+            </div>
+        </div>
+    )
+}
+
+function RangeControl({ label, value, min, max, step, display, onChange }: any) {
+    return (
+        <div className="space-y-2">
+            <div className="flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-white/40">
+                <span>{label}</span>
+                <span className="text-white/60">{display}</span>
+            </div>
+            <input
+                type="range"
+                min={min}
+                max={max}
+                step={step}
+                value={value}
+                onChange={(event) => onChange(Number(event.target.value))}
+                className="w-full accent-cyan-400"
+            />
         </div>
     )
 }
