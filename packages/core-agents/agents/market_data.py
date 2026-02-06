@@ -1,5 +1,5 @@
 from loguru import logger
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import httpx
 import asyncio
 from datetime import datetime, timedelta

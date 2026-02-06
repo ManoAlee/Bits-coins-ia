@@ -16,6 +16,18 @@ from database.db import init_db
 from pydantic import BaseModel
 from typing import Optional
 
+# Import API routers
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+try:
+    from api.universe_api import router as universe_router
+    from api.crypto_api import router as crypto_router
+    ADVANCED_APIs_AVAILABLE = True
+except Exception as e:
+    print(f"⚠️  Advanced APIs not available: {e}")
+    ADVANCED_APIs_AVAILABLE = False
+
 research_agent = None
 quant_agent = None
 reality_metrics = None
@@ -127,6 +139,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include advanced API routers
+if ADVANCED_APIs_AVAILABLE:
+    app.include_router(universe_router)
+    app.include_router(crypto_router)
+    logger.info("✅ Advanced APIs (Universe & Crypto) registered")
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
